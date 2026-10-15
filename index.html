@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E5A3C">
+<title>Site Visit Quote App</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one phone-width column, one screen at a time, sticky action bar at the bottom. Single light theme by choice (outdoor, bright-sun use). */
+:root{
+  --ground:#F2F4EF; --card:#FFFFFF; --ink:#15211B; --muted:#55615A; --line:#D5DBD3;
+  --forest:#1E5A3C; --forest-soft:#E3EEE6; --sun:#E7A93A; --sun-soft:#FBEFD6; --sun-ink:#7A5410; --rec:#B3261E;
+  --display:'Archivo', 'Arial Narrow', sans-serif; --body:'IBM Plex Sans', system-ui, sans-serif;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:15px}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+button,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.app{max-width:440px;margin:0 auto;min-height:100%;display:flex;flex-direction:column}
+.screen{flex:1;display:flex;flex-direction:column}
+.top{padding-block:20px 12px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:14px}
+.body{flex:1;padding-block:4px 16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:16px}
+.bar{position:sticky;bottom:0;background:var(--ground);padding-block:12px calc(16px + env(safe-area-inset-bottom,0px));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line)}
+.row{display:flex;gap:10px;align-items:center}
+.head{display:flex;align-items:center;gap:10px}
+.back,.iconbtn{width:44px;height:44px;border-radius:22px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em}
+h1,h2{font-family:var(--display);margin:0;text-wrap:balance}
+h1{font-size:26px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:20px;font-weight:700}
+.progress{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.progress i{height:5px;border-radius:3px;background:var(--line)}
+.progress i.on{background:var(--forest)}
+.label{font-size:13px;font-weight:600}
+.eyebrow{font-family:var(--display);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.small{font-size:12px;color:var(--muted)}
+.card{background:var(--card);border-radius:16px;padding:14px 16px}
+.list{background:var(--card);border-radius:16px;padding:2px 14px}
+.list>div{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid #E6EAE4}
+.list>div:last-child{border-bottom:none}
+.primary{height:56px;border-radius:16px;border:none;background:var(--forest);color:#fff;font-family:var(--display);font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;width:100%}
+.primary:active{transform:scale(.98)}
+.secondary{height:48px;border-radius:14px;border:1px solid #C9D0C7;background:var(--card);font-weight:600;font-size:14px;flex:1}
+.field{display:flex;flex-direction:column;gap:6px}
+.field input{height:48px;border-radius:12px;border:1px solid #C9D0C7;background:var(--card);padding:0 14px;font-size:15px;width:100%;min-width:0}
+.chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.chip{min-height:44px;border-radius:12px;border:1px solid #C9D0C7;background:var(--card);font-size:13px;font-weight:500;padding:4px}
+.chip[aria-pressed="true"]{border:2px solid var(--forest);background:var(--forest-soft);color:var(--forest);font-weight:700}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{min-height:40px;padding:0 14px;border-radius:99px;border:1px solid #C9D0C7;background:var(--card);font-size:14px}
+.pill[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tag{font-size:12px;font-weight:600;background:var(--forest-soft);color:var(--forest);padding:4px 9px;border-radius:99px;white-space:nowrap}
+.tag.sun{background:var(--sun-soft);color:var(--sun-ink)}
+.dark{background:var(--ink);color:#fff;border-radius:18px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.dark .k{font-size:12px;color:#B9C7BE;font-weight:600;letter-spacing:.04em}
+.dark .v{font-family:var(--display);font-size:30px;font-weight:800;font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.photo{height:96px;border-radius:12px;background:repeating-linear-gradient(135deg,#CFDCCB 0 8px,#C3D3BF 8px 16px);display:flex;align-items:flex-end;padding:6px}
+.photo span{font-size:11px;font-weight:600;background:#fff;padding:2px 7px;border-radius:99px}
+.photo.add{background:var(--card);border:2px dashed var(--forest);flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--forest);font-size:12px;font-weight:600}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.mic{width:56px;height:56px;border-radius:28px;border:none;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mic.on{background:var(--rec)}
+.wave{display:flex;align-items:center;gap:3px;height:28px;overflow:hidden}
+.wave b{width:4px;border-radius:2px;background:#8FA897;flex-shrink:0}
+.wave.on b{background:var(--rec);animation:pulse .9s ease-in-out infinite alternate}
+@keyframes pulse{to{transform:scaleY(.4)}}
+.note{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #E6EAE4;align-items:flex-start}
+.note:last-child{border-bottom:none}
+.note b{font-size:11px;letter-spacing:.06em;color:var(--forest);width:76px;flex-shrink:0;padding-top:2px}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:44px;height:44px;border-radius:12px;border:1px solid #C9D0C7;background:var(--card);font-size:20px}
+.stepper span{min-width:58px;text-align:center;font-family:var(--display);font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.render{position:relative;height:250px;border-radius:20px;overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background .3s}
+.render .cap{background:#fff;padding:10px 16px;border-radius:12px;text-align:center}
+.seg{position:absolute;top:12px;left:12px;display:flex;background:#fff;border-radius:99px;padding:3px}
+.seg button{height:34px;padding:0 14px;border-radius:99px;border:none;background:transparent;font-size:12px;font-weight:600}
+.seg button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.regen{position:absolute;top:12px;right:12px;border:none}
+.visit{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:var(--card);border-radius:16px;padding:14px 16px;border:2px solid transparent}
+.visit.next{border-color:var(--sun)}
+.time{width:52px;text-align:center;flex-shrink:0}
+.time strong{display:block;font-family:var(--display);font-size:17px}
+.hero{display:flex;flex-direction:column;gap:14px;background:var(--forest);color:#fff;border-radius:20px;padding:22px 20px;border:none;text-align:left;width:100%}
+.hero .plus{width:48px;height:48px;border-radius:14px;background:var(--sun);display:flex;align-items:center;justify-content:center}
+.hero h2{font-size:22px}
+.hero p{margin:0;font-size:14px;color:#D6E6DB;line-height:1.4}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stats div{background:var(--card);border-radius:14px;padding:12px}
+.stats strong{display:block;font-family:var(--display);font-size:22px}
+.toast{position:fixed;left:50%;bottom:calc(110px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 16px;border-radius:12px;font-size:14px;font-weight:600;z-index:5;max-width:calc(100% - 32px)}
+.sent{height:56px;border-radius:16px;background:var(--forest-soft);color:var(--forest);display:flex;align-items:center;justify-content:center;gap:8px;font-weight:600}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<!-- 1 HOME -->
+<section class="screen" id="s-home">
+  <div class="top">
+    <div class="row" style="justify-content:space-between">
+      <div><div class="small" style="font-weight:500">Eco Roots Landscaping</div><h1>Site visits</h1></div>
+      <button class="iconbtn" aria-label="Notifications" data-toast="No new notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></button>
+    </div>
+  </div>
+  <div class="body">
+    <button class="hero" data-go="visit">
+      <span class="plus"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#15211B" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+      <span style="display:flex;flex-direction:column;gap:4px"><h2>Start new site visit</h2><p>Photos, client notes, AI concept and quotation, all before you leave the site.</p></span>
+    </button>
+    <div class="stats">
+      <div><strong>2</strong><span class="small">Visits today</span></div>
+      <div><strong>3</strong><span class="small">Quotes to send</span></div>
+      <div><strong>5</strong><span class="small">Awaiting reply</span></div>
+    </div>
+    <div class="eyebrow">Today</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="visit" data-go="quote">
+        <span class="time"><strong>10:30</strong><span class="small">AM</span></span>
+        <span style="flex:1;min-width:0"><span class="label" style="display:block;font-size:15px">Mrs. Tan, bungalow</span><span class="small">Damansara Heights</span></span>
+        <span class="tag">Quote sent</span>
+      </button>
+      <button class="visit next" data-go="visit">
+        <span class="time"><strong>4:00</strong><span class="small">PM</span></span>
+        <span style="flex:1;min-width:0"><span class="label" style="display:block;font-size:15px">Residensi Sri Kinrara</span><span class="small">Condo podium garden</span></span>
+        <span class="tag sun">Next</span>
+      </button>
+    </div>
+    <div class="eyebrow">Drafts</div>
+    <button class="visit" data-go="quote">
+      <span style="flex:1;min-width:0"><span class="label" style="display:block;font-size:15px">Mr. Rajan, terrace house</span><span class="small">Concept ready · quote not sent</span></span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+    <p class="small" style="margin:0">Example data for the prototype.</p>
+  </div>
+</section>
+
+<!-- 2 VISIT -->
+<section class="screen" id="s-visit" hidden>
+  <div class="top">
+    <div class="head"><button class="back" data-go="home" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><div class="step">STEP 1 OF 5</div><h2>Visit details</h2></div></div>
+    <div class="progress"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+  </div>
+  <div class="body">
+    <div class="field"><label class="label" for="client">Client name</label><input id="client" value="Residensi Sri Kinrara, JMB"></div>
+    <div class="field"><label class="label" for="phone">WhatsApp number</label><input id="phone" inputmode="tel" value="+60 12-345 6789"></div>
+    <div class="field"><label class="label" for="addr">Site address</label>
+      <div class="row"><input id="addr" value="Jalan BK 5A, Bandar Kinrara, Puchong"><button class="iconbtn" style="background:var(--forest-soft);border:none;border-radius:12px;width:48px;height:48px" aria-label="Use my GPS location" data-toast="Location pinned"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E5A3C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7"/></svg></button></div>
+      <span class="small">Pinned from GPS · 3.0397° N, 101.6481° E</span>
+    </div>
+    <div class="field"><span class="label">Property type</span>
+      <div class="chips" data-single>
+        <button class="chip" aria-pressed="false">Bungalow</button><button class="chip" aria-pressed="false">Terrace</button><button class="chip" aria-pressed="true">Condo / strata</button>
+        <button class="chip" aria-pressed="false">Commercial</button><button class="chip" aria-pressed="false">University</button><button class="chip" aria-pressed="false">Public park</button>
+      </div>
+    </div>
+    <div class="field"><span class="label">Budget range (if shared)</span>
+      <div class="pills" data-single>
+        <button class="pill" aria-pressed="false">Not shared</button><button class="pill" aria-pressed="false">&lt; RM 10k</button><button class="pill" aria-pressed="true">RM 10–30k</button><button class="pill" aria-pressed="false">RM 30k+</button>
+      </div>
+    </div>
+  </div>
+  <div class="bar"><button class="primary" data-go="capture">Start capturing <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+</section>
+
+<!-- 3 CAPTURE -->
+<section class="screen" id="s-capture" hidden>
+  <div class="top">
+    <div class="head"><button class="back" data-go="visit" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><div class="step">STEP 2 OF 5</div><h2>Capture the site</h2></div></div>
+    <div class="progress"><i class="on"></i><i class="on"></i><i></i><i></i><i></i></div>
+  </div>
+  <div class="body">
+    <div class="field">
+      <div class="row" style="justify-content:space-between"><span class="label">Site photos</span><span class="small" id="photoCount">5 taken · tag each zone</span></div>
+      <div class="grid3" id="photos">
+        <div class="photo"><span>Entrance</span></div><div class="photo"><span>Podium</span></div><div class="photo"><span>Pool deck</span></div>
+        <div class="photo"><span>Drain</span></div><div class="photo"><span>Slope</span></div>
+        <button class="photo add" id="addPhoto" aria-label="Take photo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></svg>Add</button>
+      </div>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:12px;border-radius:18px">
+      <div class="row" style="gap:14px">
+        <button class="mic" id="mic" aria-label="Start recording"><svg id="micIcon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></svg></button>
+        <div style="flex:1;min-width:0"><div class="label" style="font-size:15px" id="recTitle">Record client conversation</div><div class="small" id="recSub">12 min recorded · English + BM</div></div>
+      </div>
+      <div class="wave" id="wave"></div>
+    </div>
+    <div class="field">
+      <div class="row" style="gap:6px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1E5A3C" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"/></svg><span class="label">Key notes from the conversation</span></div>
+      <div class="list" style="padding:2px 14px" id="notes">
+        <div class="note"><b>STYLE</b><span>Tropical resort feel, low maintenance</span></div>
+        <div class="note"><b>MUST-HAVE</b><span>Shade near pool deck, no thorny plants (kids)</span></div>
+        <div class="note"><b>PROBLEM</b><span>Water pooling at podium drain after rain</span></div>
+        <div class="note"><b>TIMING</b><span>Complete before CNY · JMB meets next month</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="bar"><button class="primary" data-go="measure">Next: measure areas <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+</section>
+
+<!-- 4 MEASURE -->
+<section class="screen" id="s-measure" hidden>
+  <div class="top">
+    <div class="head"><button class="back" data-go="capture" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><div class="step">STEP 3 OF 5</div><h2>Measure zones</h2></div></div>
+    <div class="progress"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i></div>
+  </div>
+  <div class="body">
+    <div class="dark"><div><div class="k">TOTAL WORK AREA</div><div class="v"><span id="total">263</span> m²</div></div>
+      <button style="height:44px;padding:0 14px;border-radius:12px;border:1px solid #3C4A42;background:#24332B;color:#fff;font-size:13px;font-weight:600" data-toast="Draw on a photo to measure (coming soon)">Mark on photo</button></div>
+    <div id="zones" style="display:flex;flex-direction:column;gap:12px"></div>
+  </div>
+  <div class="bar"><button class="primary" id="generate"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E7A93A" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"/></svg><span>Generate design concept</span></button></div>
+</section>
+
+<!-- 5 CONCEPT -->
+<section class="screen" id="s-concept" hidden>
+  <div class="top">
+    <div class="head"><button class="back" data-go="measure" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><div class="step">STEP 4 OF 5</div><h2>Design concept</h2></div></div>
+    <div class="progress"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i></i></div>
+  </div>
+  <div class="body">
+    <div class="chips" id="styles">
+      <button class="chip" aria-pressed="true">Tropical</button><button class="chip" aria-pressed="false">Modern</button><button class="chip" aria-pressed="false">Balinese</button>
+    </div>
+    <div class="render" id="render">
+      <div class="cap"><div class="label" id="renderLabel">AI concept render: Tropical</div><div class="small">Podium garden · photo 2</div></div>
+      <div class="seg"><button id="before" aria-pressed="false">Before</button><button id="after" aria-pressed="true">After</button></div>
+      <button class="iconbtn regen" aria-label="Regenerate concept" data-toast="New variation generated"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
+    </div>
+    <div class="field">
+      <div class="row" style="justify-content:space-between"><span class="label">Plant palette</span><span class="small">Full sun, KL climate</span></div>
+      <div class="list" id="plants"></div>
+    </div>
+  </div>
+  <div class="bar"><div class="row"><button class="secondary" style="flex:0 0 auto;padding:0 18px;height:56px;border-radius:16px" data-toast="Full-screen view for the client">Show client</button><button class="primary" data-go="quote">Build quotation</button></div></div>
+</section>
+
+<!-- 6 QUOTE -->
+<section class="screen" id="s-quote" hidden>
+  <div class="top">
+    <div class="head"><button class="back" data-go="concept" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div style="flex:1"><div class="step">STEP 5 OF 5 · QT-2026-0148</div><h2>Quotation</h2></div><span class="tag sun" style="font-size:11px">SAMPLE RATES</span></div>
+    <div class="progress"><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i></div>
+  </div>
+  <div class="body">
+    <div class="list" id="lines"></div>
+    <div class="card" style="display:flex;flex-direction:column;gap:10px">
+      <div class="row" style="justify-content:space-between"><span class="label">Margin</span><span class="small">Only you see this</span></div>
+      <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px" id="margins"></div>
+    </div>
+    <div class="dark"><div><div class="k">CLIENT TOTAL</div><div class="v" id="qtotal">RM 0</div></div><div class="small" style="color:#B9C7BE;text-align:right">Valid 30 days<br>50% deposit</div></div>
+  </div>
+  <div class="bar">
+    <button class="primary" id="send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Send via WhatsApp</button>
+    <div class="sent" id="sent" hidden><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Sent with concept images (demo)</div>
+    <div class="row"><button class="secondary" data-toast="PDF preview (coming soon)">Preview PDF</button><button class="secondary" data-go="home">Back to visits</button></div>
+  </div>
+</section>
+
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const $ = (s, r=document) => r.querySelector(s);
+const screens = ['home','visit','capture','measure','concept','quote'];
+function go(name){
+  screens.forEach(s => $('#s-'+s).hidden = s !== name);
+  window.scrollTo(0,0);
+}
+let tt;
+function toast(msg){ const t=$('#toast'); t.textContent=msg; t.hidden=false; clearTimeout(tt); tt=setTimeout(()=>t.hidden=true,1800); }
+
+document.addEventListener('click', e => {
+  const g = e.target.closest('[data-go]'); if (g) { go(g.dataset.go); return; }
+  const t = e.target.closest('[data-toast]'); if (t) toast(t.dataset.toast);
+  const single = e.target.closest('[data-single] > button');
+  if (single) { single.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b===single)); }
+});
+
+/* Capture */
+const heights=[8,14,20,10,24,18,6,12,26,16,9,22,14,7,19,25,11,15,8,21,13,27,10,17,6,23,12,18,9,20,14,8,24,11,16,22,7,13,19,10];
+$('#wave').innerHTML = heights.map((h,i)=>`<b style="height:${h}px;animation-delay:${(i%7)*0.1}s"></b>`).join('');
+let rec=false, secs=134, timer;
+$('#mic').onclick = () => {
+  rec=!rec; $('#mic').classList.toggle('on',rec); $('#wave').classList.toggle('on',rec);
+  $('#mic').setAttribute('aria-label', rec?'Stop recording':'Start recording');
+  $('#micIcon').innerHTML = rec ? '<rect x="6" y="6" width="12" height="12" rx="2" fill="#fff" stroke="none"/>' : '<rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/>';
+  $('#recSub').textContent = rec ? 'Tap to stop. Notes update live.' : '14 min recorded · English + BM';
+  clearInterval(timer);
+  if(rec){ const f=()=>$('#recTitle').textContent='Listening… '+String(Math.floor(secs/60)).padStart(2,'0')+':'+String(secs%60).padStart(2,'0'); f(); timer=setInterval(()=>{secs++;f();},1000); }
+  else { $('#recTitle').textContent='Record client conversation'; const n=document.createElement('div'); n.className='note'; n.innerHTML='<b>NEW</b><span>Client asked about monthly maintenance package</span>'; $('#notes').appendChild(n); toast('Key note added from recording'); }
+};
+let photos=5; const zonesNames=['Walkway','Bin area','Guardhouse','Playground'];
+$('#addPhoto').onclick = () => { const d=document.createElement('div'); d.className='photo'; d.innerHTML='<span>'+(zonesNames[(photos-5)%4])+'</span>'; $('#photos').insertBefore(d,$('#addPhoto')); photos++; $('#photoCount').textContent=photos+' taken · tag each zone'; };
+
+/* Measure */
+const zones=[
+  {name:'Podium garden',work:'Turfing + planting beds',tags:['Philippine grass','Soil top-up'],a:120},
+  {name:'Entrance & driveway',work:'Feature planting',tags:['Shrubs','Uplights'],a:85},
+  {name:'Pool deck',work:'Shade planting + pots',tags:['Palms','Planters'],a:40},
+  {name:'Podium drain',work:'Drainage fix',tags:['Perforated pipe','Gravel'],a:18}];
+function drawZones(){
+  $('#zones').innerHTML = zones.map((z,i)=>`<div class="card" style="display:flex;flex-direction:column;gap:10px">
+    <div class="row" style="justify-content:space-between;flex-wrap:wrap">
+      <div style="min-width:0"><div class="label" style="font-size:15px">${z.name}</div><div class="small">${z.work}</div></div>
+      <div class="stepper"><button data-z="${i}" data-d="-5" aria-label="Decrease ${z.name} area">−</button><span>${z.a} m²</span><button data-z="${i}" data-d="5" aria-label="Increase ${z.name} area">+</button></div>
+    </div>
+    <div class="row" style="gap:6px;flex-wrap:wrap">${z.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div></div>`).join('');
+  $('#total').textContent = zones.reduce((s,z)=>s+z.a,0);
+}
+$('#zones').onclick = e => { const b=e.target.closest('[data-z]'); if(!b) return; const z=zones[b.dataset.z]; z.a=Math.max(0,z.a+ +b.dataset.d); drawZones(); drawQuote(); };
+drawZones();
+$('#generate').onclick = () => { const b=$('#generate'); b.disabled=true; b.querySelector('span').textContent='Generating concept…'; setTimeout(()=>{ b.disabled=false; b.querySelector('span').textContent='Generate design concept'; go('concept'); },1100); };
+
+/* Concept */
+const bg={Tropical:'repeating-linear-gradient(135deg,#7FA86A 0 10px,#6E9A5B 10px 20px)',Modern:'repeating-linear-gradient(135deg,#B9C2B4 0 10px,#A9B4A3 10px 20px)',Balinese:'repeating-linear-gradient(135deg,#9C8A62 0 10px,#8C7B55 10px 20px)'};
+const palettes={
+  Tropical:[['Foxtail palm','Shade along pool deck','6 nos'],['Heliconia','Colour accent, beds','40 nos'],['Philippine grass','Podium lawn','120 m²'],['Bird’s nest fern','Shaded corners','24 nos']],
+  Modern:[['Pygmy date palm','Feature, in planters','8 nos'],['Mondo grass','Edging','60 m'],['Philippine grass','Podium lawn','120 m²'],['White pebbles','Mulch, low upkeep','18 m²']],
+  Balinese:[['Frangipani','Entrance feature','4 nos'],['Cordyline','Colour screen','50 nos'],['Philippine grass','Podium lawn','120 m²'],['Stone lanterns','Pool deck accents','3 nos']]};
+let style='Tropical', after=true;
+function drawConcept(){
+  $('#render').style.background = after ? bg[style] : 'repeating-linear-gradient(135deg,#CFDCCB 0 10px,#C3D3BF 10px 20px)';
+  $('#renderLabel').textContent = after ? 'AI concept render: '+style : 'Original site photo';
+  $('#before').setAttribute('aria-pressed',!after); $('#after').setAttribute('aria-pressed',after);
+  $('#plants').innerHTML = palettes[style].map(p=>`<div><div><div class="label" style="font-size:14px">${p[0]}</div><div class="small">${p[1]}</div></div><span class="num" style="font-size:13px">${p[2]}</span></div>`).join('');
+}
+$('#styles').addEventListener('click', e => { const b=e.target.closest('button'); if(b){ style=b.textContent; after=true; drawConcept(); }});
+$('#before').onclick=()=>{after=false;drawConcept();}; $('#after').onclick=()=>{after=true;drawConcept();};
+drawConcept();
+
+/* Quote: sample rates, tied to measured areas */
+let margin=20;
+const rm=n=>'RM '+Math.round(n).toLocaleString('en-MY');
+function drawQuote(){
+  const lines=[
+    ['Turfing, Philippine grass', zones[0].a+' m² × RM 18 incl. soil', zones[0].a*18],
+    ['Planting beds & shrubs', zones[1].a+' m² × RM 56', zones[1].a*56],
+    ['Foxtail palms, pool deck', '6 nos × RM 650', 3900],
+    ['Podium drainage fix', zones[3].a+' m² × RM 133', zones[3].a*133],
+    ['Labour, transport & disposal', '4 days · 1 lorry', 1500]];
+  const sub=lines.reduce((s,l)=>s+l[2],0);
+  $('#lines').innerHTML = lines.map(l=>`<div><div style="min-width:0"><div class="label" style="font-size:14px">${l[0]}</div><div class="small">${l[1]}</div></div><span class="num" style="font-size:14px">${rm(l[2])}</span></div>`).join('') +
+    `<div><span class="small" style="font-size:13px">Cost subtotal</span><span class="num small" style="font-size:13px">${rm(sub)}</span></div>`;
+  $('#margins').innerHTML=[15,20,25,30].map(v=>`<button class="chip" aria-pressed="${v===margin}" data-m="${v}" style="font-size:14px">${v}%</button>`).join('');
+  $('#qtotal').textContent = rm(sub*(1+margin/100));
+}
+$('#margins').onclick=e=>{const b=e.target.closest('[data-m]'); if(b){margin=+b.dataset.m; drawQuote();}};
+drawQuote();
+$('#send').onclick=()=>{ $('#send').hidden=true; $('#sent').hidden=false; toast('Quotation sent (demo)'); };
+</script>
+</body>
+</html>
