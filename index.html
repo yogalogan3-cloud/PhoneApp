@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1E5A3C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Site Visit Quote</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* One phone-width column, one screen at a time, sticky action bar. Single light theme for outdoor use. */
+:root{
+  --ground:#F2F4EF; --card:#FFFFFF; --ink:#15211B; --muted:#55615A; --line:#D5DBD3; --field:#C9D0C7; --hair:#E6EAE4;
+  --forest:#1E5A3C; --forest-soft:#E3EEE6; --sun:#E7A93A; --sun-soft:#FBEFD6; --sun-ink:#7A5410; --rec:#B3261E; --rec-soft:#FBE4E2;
+  --display:'Archivo','Arial Narrow',sans-serif; --body:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;min-height:100%}
+body{background:var(--ground);color:var(--ink);font-family:var(--body);font-size:15px;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea{font:inherit;color:inherit}
+button,label.btnlike{cursor:pointer}
+button:disabled{opacity:.55;cursor:default}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+img{max-width:100%}
+.app{max-width:480px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+.screen{flex:1;display:flex;flex-direction:column}
+.pad{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{padding-top:calc(16px + env(safe-area-inset-top,0px));padding-bottom:10px;display:flex;flex-direction:column;gap:12px}
+.body{flex:1;padding-block:4px 20px;display:flex;flex-direction:column;gap:16px}
+.bar{position:sticky;bottom:0;z-index:3;background:var(--ground);border-top:1px solid var(--line);padding-top:12px;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px}
+.row{display:flex;gap:10px;align-items:center}
+.between{justify-content:space-between}
+.wrap{flex-wrap:wrap}
+.grow{flex:1;min-width:0}
+.head{display:flex;align-items:center;gap:10px}
+.iconbtn{width:44px;height:44px;border-radius:22px;border:1px solid var(--line);background:var(--card);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.iconbtn.sm{width:36px;height:36px;border-radius:10px}
+.step{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.05em}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance}
+h1{font-size:26px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:20px;font-weight:700}
+h3{font-size:16px;font-weight:700}
+.progress{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.progress button{height:18px;border:none;background:transparent;padding:0;display:flex;align-items:center}
+.progress button i{display:block;width:100%;height:5px;border-radius:3px;background:var(--line)}
+.progress button.on i{background:var(--forest)}
+.label{font-size:13px;font-weight:600}
+.eyebrow{font-family:var(--display);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.small{font-size:12px;color:var(--muted)}
+.muted{color:var(--muted)}
+.card{background:var(--card);border-radius:16px;padding:14px 16px}
+.stack{display:flex;flex-direction:column;gap:10px}
+.stack-s{display:flex;flex-direction:column;gap:6px}
+.primary{min-height:56px;border-radius:16px;border:none;background:var(--forest);color:#fff;font-family:var(--display);font-size:17px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:0 16px;text-decoration:none}
+.primary:active{transform:scale(.98)}
+.secondary{min-height:48px;border-radius:14px;border:1px solid var(--field);background:var(--card);font-weight:600;font-size:14px;display:flex;align-items:center;justify-content:center;gap:6px;padding:0 14px;text-decoration:none;color:var(--ink)}
+.ghost{min-height:44px;border-radius:12px;border:2px dashed #8FA897;background:transparent;color:var(--forest);font-weight:600;font-size:14px;width:100%}
+.link{border:none;background:none;color:var(--forest);font-weight:600;font-size:14px;padding:8px 0;min-height:36px}
+.danger{color:var(--rec)}
+.in,.ta,.sel{border-radius:12px;border:1px solid var(--field);background:var(--card);padding:0 12px;font-size:15px;width:100%;min-width:0}
+.in{height:46px}
+.in.sm{height:40px;font-size:14px;padding:0 10px}
+.sel{height:40px;font-size:13px;font-weight:600;padding:0 8px}
+.ta{padding:10px 12px;min-height:92px;resize:vertical;line-height:1.45}
+.field{display:flex;flex-direction:column;gap:6px}
+.chips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.chip{min-height:44px;border-radius:12px;border:1px solid var(--field);background:var(--card);font-size:13px;font-weight:500;padding:4px 6px}
+.chip[aria-pressed="true"]{border:2px solid var(--forest);background:var(--forest-soft);color:var(--forest);font-weight:700}
+.pills{display:flex;gap:8px;flex-wrap:wrap}
+.pill{min-height:40px;padding:0 14px;border-radius:99px;border:1px solid var(--field);background:var(--card);font-size:14px}
+.pill[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.tag{font-size:12px;font-weight:600;background:var(--forest-soft);color:var(--forest);padding:4px 9px;border-radius:99px;white-space:nowrap}
+.tag.sun{background:var(--sun-soft);color:var(--sun-ink)}
+.tag.grey{background:#ECEFEA;color:var(--muted)}
+.dark{background:var(--ink);color:#fff;border-radius:18px;padding:16px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.dark .k{font-size:12px;color:#B9C7BE;font-weight:600;letter-spacing:.05em}
+.dark .v{font-family:var(--display);font-size:28px;font-weight:800;font-variant-numeric:tabular-nums}
+.num{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.photos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.ph{background:var(--card);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.ph .img{position:relative;aspect-ratio:4/3;background:#DDE5DA}
+.ph .img img{width:100%;height:100%;object-fit:cover;display:block}
+.ph .x{position:absolute;top:6px;right:6px;width:32px;height:32px;border-radius:16px;border:none;background:rgba(21,33,27,.75);color:#fff;display:flex;align-items:center;justify-content:center}
+.ph .in{border:none;border-radius:0;border-top:1px solid var(--hair);height:40px;font-size:13px}
+.addph{aspect-ratio:4/3;border-radius:14px;border:2px dashed var(--forest);background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--forest);font-size:13px;font-weight:600}
+.mic{width:60px;height:60px;border-radius:30px;border:none;background:var(--forest);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mic.on{background:var(--rec)}
+.wave{display:flex;align-items:center;gap:3px;height:30px;overflow:hidden}
+.wave b{width:4px;border-radius:2px;background:#8FA897;flex-shrink:0;height:6px;transition:height .08s}
+.wave.on b{background:var(--rec)}
+.notecard{display:flex;flex-direction:column}
+.note{display:grid;grid-template-columns:118px minmax(0,1fr) 36px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--hair)}
+.note:last-child{border-bottom:none}
+.note .sel{color:var(--forest)}
+.zone{display:flex;flex-direction:column;gap:10px}
+.stepper{display:flex;align-items:center;gap:6px}
+.stepper button{width:44px;height:44px;border-radius:12px;border:1px solid var(--field);background:var(--card);font-size:20px;flex-shrink:0}
+.stepper input{width:76px;text-align:center;font-family:var(--display);font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.thumbs{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.thumb{flex:0 0 auto;width:92px;height:70px;border-radius:12px;overflow:hidden;border:3px solid transparent;padding:0;background:#DDE5DA;position:relative}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb[aria-pressed="true"]{border-color:var(--forest)}
+.thumb .badge{position:absolute;left:4px;bottom:4px;font-size:10px;font-weight:700;background:#fff;border-radius:99px;padding:1px 6px}
+.cmp{position:relative;border-radius:18px;overflow:hidden;background:#DDE5DA;--pos:50%;touch-action:pan-y}
+.cmp img{display:block;width:100%;user-select:none;-webkit-user-drag:none}
+.cmp .after{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:inset(0 0 0 var(--pos))}
+.cmp .handle{position:absolute;top:0;bottom:0;left:var(--pos);width:3px;margin-left:-1.5px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.15);pointer-events:none}
+.cmp .handle::after{content:"";position:absolute;top:50%;left:50%;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:17px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+.cmp input{position:absolute;inset:0;width:100%;height:100%;opacity:0;margin:0;cursor:ew-resize}
+.cmp .lb{position:absolute;top:10px;font-size:12px;font-weight:700;background:rgba(21,33,27,.75);color:#fff;padding:4px 10px;border-radius:99px;pointer-events:none}
+.cmp .lb.l{left:10px}.cmp .lb.r{right:10px}
+.loading{border-radius:18px;background:var(--card);padding:28px 18px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.spin{width:28px;height:28px;border-radius:50%;border:3px solid var(--forest-soft);border-top-color:var(--forest);animation:spin .8s linear infinite}
+.spin.sm{width:18px;height:18px;border-width:2px}
+.spin.light{border-color:rgba(255,255,255,.35);border-top-color:#fff}
+@keyframes spin{to{transform:rotate(360deg)}}
+.plant{display:grid;grid-template-columns:minmax(0,1fr) 64px 58px 36px;gap:6px;align-items:center;padding:8px 0;border-bottom:1px solid var(--hair)}
+.plant:last-child{border-bottom:none}
+.line{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-bottom:1px solid var(--hair)}
+.line:last-child{border-bottom:none}
+.lgrid{display:grid;grid-template-columns:72px 64px minmax(0,1fr) auto;gap:6px;align-items:center}
+.visit{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:var(--card);border-radius:16px;padding:14px 16px;border:2px solid transparent}
+.hero{display:flex;flex-direction:column;gap:14px;background:var(--forest);color:#fff;border-radius:20px;padding:22px 20px;border:none;text-align:left;width:100%}
+.hero .plus{width:48px;height:48px;border-radius:14px;background:var(--sun);display:flex;align-items:center;justify-content:center}
+.hero p{margin:0;font-size:14px;color:#D6E6DB;line-height:1.4}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.stats div{background:var(--card);border-radius:14px;padding:12px}
+.stats strong{display:block;font-family:var(--display);font-size:22px}
+.toast{position:fixed;left:50%;bottom:calc(120px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 16px;border-radius:12px;font-size:14px;font-weight:600;z-index:20;width:max-content;max-width:calc(100% - 32px);line-height:1.35}
+.toast.err{background:var(--rec)}
+.empty{background:var(--card);border-radius:16px;padding:18px;color:var(--muted);font-size:14px;line-height:1.45}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px}
+.switch input{width:22px;height:22px;accent-color:var(--forest)}
+.rate{display:grid;grid-template-columns:minmax(0,1fr) 64px 76px 36px;gap:6px;align-items:center}
+.ok{color:var(--forest);font-weight:600}
+.bad{color:var(--rec);font-weight:600}
+summary{cursor:pointer;font-weight:600;font-size:14px;min-height:36px;display:flex;align-items:center}
+
+/* Quotation document */
+.docwrap{overflow-x:auto;padding-block:8px 20px}
+.doc{-webkit-print-color-adjust:exact;print-color-adjust:exact;background:#fff;color:#1b1f1c;width:100%;max-width:794px;margin:0 auto;padding:28px 24px;font-size:12.5px;line-height:1.45;box-shadow:0 2px 10px rgba(0,0,0,.08);border-radius:6px}
+.doc h1{font-size:22px;letter-spacing:.06em;color:var(--forest)}
+.doc .dh{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:3px solid var(--forest);padding-bottom:14px}
+.doc .co{display:flex;gap:12px;align-items:flex-start;min-width:0}
+.doc .co img{width:64px;height:64px;object-fit:contain}
+.doc .co strong{font-family:var(--display);font-size:16px;display:block}
+.doc .meta{text-align:right;font-variant-numeric:tabular-nums}
+.doc .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.doc .lab{font-size:10.5px;font-weight:700;letter-spacing:.08em;color:#5d6a62;text-transform:uppercase;margin-bottom:3px}
+.doc table{width:100%;border-collapse:collapse;margin-top:16px;font-variant-numeric:tabular-nums}
+.doc th{background:var(--forest);color:#fff;text-align:left;font-size:11px;padding:7px 6px;font-weight:600}
+.doc td{padding:7px 6px;border-bottom:1px solid #e3e7e1;vertical-align:top}
+.doc td.r,.doc th.r{text-align:right;white-space:nowrap}
+.doc .det{color:#5d6a62;font-size:11px}
+.doc .tot{margin-left:auto;width:min(300px,100%);margin-top:10px}
+.doc .tot div{display:flex;justify-content:space-between;padding:4px 6px;font-variant-numeric:tabular-nums}
+.doc .tot .g{background:var(--forest);color:#fff;font-weight:700;font-size:14px;border-radius:4px;padding:8px 6px}
+.doc ul{margin:4px 0 0;padding-left:18px}
+.doc .sec{margin-top:18px}
+.doc .sign{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;margin-top:30px}
+.doc .sign div{border-top:1px solid #9aa59e;padding-top:6px;font-size:11px;color:#5d6a62}
+.doc .pics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:8px}
+.doc .pics figure{margin:0}
+.doc .pics img{width:100%;border-radius:4px;display:block;aspect-ratio:4/3;object-fit:cover}
+.doc figcaption{font-size:10.5px;color:#5d6a62;margin-top:3px}
+.doc .pb{margin-top:26px;padding-top:18px;border-top:1px dashed #cfd6cd}
+.doc .note{display:block;border:none;padding:0}
+@media (max-width:520px){ .doc{padding:18px 14px;font-size:11.5px} .doc .two{grid-template-columns:1fr} .doc .meta{text-align:left} }
+@media print{
+  @page{size:A4;margin:12mm}
+  body{background:#fff}
+  .app>*:not(#s-preview), #s-preview .top, #s-preview .bar, .toast{display:none!important}
+  .app{max-width:none}
+  .docwrap{padding:0;overflow:visible}
+  .doc{box-shadow:none;max-width:none;padding:0;border-radius:0;font-size:11.5px}
+  .doc .two{grid-template-columns:repeat(2,minmax(0,1fr))} .doc .meta{text-align:right}
+  .doc .pb{break-before:page;border-top:none;margin-top:0;padding-top:0}
+  .doc tr,.doc figure{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:2s!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HOME -->
+<section class="screen" id="s-home">
+  <div class="top pad">
+    <div class="row between">
+      <div class="grow"><div class="small" style="font-weight:500" id="homeCo">Eco Roots Landscaping</div><h1>Site visits</h1></div>
+      <button class="iconbtn" data-go="settings" aria-label="Settings"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+    </div>
+  </div>
+  <div class="body pad" id="b-home"></div>
+</section>
+
+<!-- STEP 1: VISIT -->
+<section class="screen" id="s-visit" hidden>
+  <div class="top pad">
+    <div class="head"><button class="iconbtn" data-go="home" aria-label="Back to visits"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><div class="step">STEP 1 OF 5</div><h2>Visit details</h2></div></div>
+    <nav class="progress" data-step="1"></nav>
+  </div>
+  <div class="body pad" id="b-visit"></div>
+  <div class="bar pad"><button class="primary" data-go="capture">Start capturing <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+</section>
+
+<!-- STEP 2: CAPTURE -->
+<section class="screen" id="s-capture" hidden>
+  <div class="top pad">
+    <div class="head"><button class="iconbtn" data-go="visit" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><div class="step">STEP 2 OF 5</div><h2>Capture the site</h2></div></div>
+    <nav class="progress" data-step="2"></nav>
+  </div>
+  <div class="body pad" id="b-capture"></div>
+  <div class="bar pad"><button class="primary" data-go="measure">Next: measure zones <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+</section>
+
+<!-- STEP 3: MEASURE -->
+<section class="screen" id="s-measure" hidden>
+  <div class="top pad">
+    <div class="head"><button class="iconbtn" data-go="capture" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><div class="step">STEP 3 OF 5</div><h2>Measure zones</h2></div></div>
+    <nav class="progress" data-step="3"></nav>
+  </div>
+  <div class="body pad" id="b-measure"></div>
+  <div class="bar pad"><button class="primary" data-go="concept"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E7A93A" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"/></svg>Next: design concept</button></div>
+</section>
+
+<!-- STEP 4: CONCEPT -->
+<section class="screen" id="s-concept" hidden>
+  <div class="top pad">
+    <div class="head"><button class="iconbtn" data-go="measure" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><div class="step">STEP 4 OF 5</div><h2>Design concept</h2></div></div>
+    <nav class="progress" data-step="4"></nav>
+  </div>
+  <div class="body pad" id="b-concept"></div>
+  <div class="bar pad"><button class="primary" data-go="quote">Next: quotation <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+</section>
+
+<!-- STEP 5: QUOTE -->
+<section class="screen" id="s-quote" hidden>
+  <div class="top pad">
+    <div class="head"><button class="iconbtn" data-go="concept" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div class="grow"><div class="step" id="qStep">STEP 5 OF 5</div><h2>Quotation</h2></div></div>
+    <nav class="progress" data-step="5"></nav>
+  </div>
+  <div class="body pad" id="b-quote"></div>
+  <div class="bar pad">
+    <button class="primary" data-go="preview"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>Preview quotation</button>
+  </div>
+</section>
+
+<!-- PREVIEW -->
+<section class="screen" id="s-preview" hidden>
+  <div class="top pad">
+    <div class="head"><button class="iconbtn" data-go="quote" aria-label="Back to edit"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div class="grow"><div class="step">CLIENT VIEW</div><h2>Quotation preview</h2></div></div>
+  </div>
+  <div class="docwrap pad"><div class="doc" id="doc"></div></div>
+  <div class="bar pad">
+    <div class="row">
+      <button class="secondary grow" data-act="print"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M12 18v-6M9 15l3 3 3-3"/></svg>Save PDF</button>
+      <button class="secondary grow" data-act="share"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/></svg>Share</button>
+    </div>
+    <a class="primary" id="waLink" href="#" target="_blank" rel="noopener" data-act="wa"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/></svg>Send on WhatsApp</a>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section class="screen" id="s-settings" hidden>
+  <div class="top pad">
+    <div class="head"><button class="iconbtn" data-go="home" aria-label="Back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button><div><div class="step">SAVED ON THIS PHONE</div><h2>Settings</h2></div></div>
+  </div>
+  <div class="body pad" id="b-settings"></div>
+</section>
+
+</div>
+
+<input type="file" id="camIn" accept="image/*" capture="environment" hidden>
+<input type="file" id="galIn" accept="image/*" multiple hidden>
+<input type="file" id="logoIn" accept="image/*" hidden>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+/* ---------- helpers ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Math.random().toString(36).slice(2, 10);
+const n2 = n => (Math.round((+n || 0) * 100) / 100).toLocaleString('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const rm = n => 'RM ' + n2(n);
+const today = () => new Date().toISOString().slice(0, 10);
+const fmtDate = d => new Date(d).toLocaleDateString('en-MY', { day: 'numeric', month: 'short', year: 'numeric' });
+let toastT;
+function toast(msg, err) { const t = $('#toast'); t.textContent = msg; t.className = 'toast' + (err ? ' err' : ''); t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, err ? 5000 : 2200); }
+
+/* ---------- storage (IndexedDB, on this phone) ---------- */
+const db = (() => {
+  let p;
+  const open = () => p || (p = new Promise((res, rej) => {
+    const r = indexedDB.open('site-visit-quote', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('kv');
+    r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+  }));
+  const run = async (mode, fn) => { const d = await open(); return new Promise((res, rej) => { const t = d.transaction('kv', mode); const q = fn(t.objectStore('kv')); t.oncomplete = () => res(q && q.result); t.onerror = () => rej(t.error); }); };
+  return { get: k => run('readonly', s => s.get(k)), set: (k, v) => run('readwrite', s => s.put(v, k)), del: k => run('readwrite', s => s.delete(k)), all: () => run('readonly', s => s.getAll()) };
+})();
+
+const SAMPLE_RATES = [
+  ['Philippine grass turfing incl. soil prep', 'm²', 18], ['Cow grass turfing incl. soil prep', 'm²', 12],
+  ['Topsoil (black soil) supply & spread', 'm³', 90], ['Shrubs, supply & plant (1–2 ft)', 'nos', 15],
+  ['Groundcover planting', 'm²', 35], ['Foxtail palm (6–8 ft)', 'nos', 650], ['Pygmy date palm', 'nos', 380],
+  ['Feature tree (10–12 ft)', 'nos', 900], ['Pebble / gravel mulch', 'm²', 45], ['Perforated subsoil drain', 'm', 60],
+  ['Planter box (fibreglass, medium)', 'nos', 250], ['Garden uplight, supply & install', 'nos', 180],
+  ['General worker', 'day', 150], ['Lorry transport & disposal', 'trip', 350],
+].map(([name, unit, rate]) => ({ id: uid(), name, unit, rate }));
+
+const DEFAULT_SETTINGS = {
+  coName: 'Eco Roots Landscaping (M) Sdn Bhd', coReg: '', coAddress: '', coPhone: '', coEmail: '', logo: '',
+  margin: 20, sstRate: 8, validity: 30, deposit: 50, seq: 1, passcode: '',
+  terms: 'Prices quoted in Ringgit Malaysia.\nWork starts within 14 days of deposit.\nBalance payable on completion.\nPlant warranty: 30 days from handover, subject to regular watering.',
+  rateCard: SAMPLE_RATES, rateCardSample: true,
+};
+const STYLES = ['Tropical resort', 'Modern minimalist', 'Balinese', 'Japanese zen', 'Low maintenance', 'Edible garden'];
+const PTYPES = ['Bungalow', 'Terrace', 'Condo / strata', 'Commercial', 'University', 'Public park'];
+const BUDGETS = ['Not shared', '< RM 10k', 'RM 10–30k', 'RM 30–80k', 'RM 80k+'];
+const NOTE_LABELS = ['STYLE', 'MUST-HAVE', 'AVOID', 'PROBLEM', 'BUDGET', 'TIMING', 'ACCESS', 'MAINTENANCE', 'OTHER'];
+const ZONE_HINTS = ['Front yard', 'Back yard', 'Side lane', 'Entrance', 'Driveway', 'Podium', 'Pool deck', 'Slope', 'Drain', 'Rooftop'];
+
+let S = { ...DEFAULT_SETTINGS };
+let V = null;
+let current = 'home';
+const busy = {};
+
+function blankVisit() {
+  return { id: uid(), kind: 'visit', created: Date.now(), updated: Date.now(), date: today(), client: '', phone: '', address: '', gps: null,
+    propertyType: '', budget: '', photos: [], transcript: '', summary: '', notes: [], zones: [], concepts: [], activeConcept: null,
+    photoId: null, style: STYLES[0], extra: '', plants: [], paletteStyle: '', lines: [], assumptions: [], exclusions: [],
+    margin: S.margin, sst: false, status: 'draft', quoteNo: '' };
+}
+let saveT, saveST;
+function save() { if (!V) return; V.updated = Date.now(); clearTimeout(saveT); saveT = setTimeout(() => db.set('visit:' + V.id, V).catch(() => toast('Could not save on this phone. Storage may be full.', true)), 300); }
+function saveS() { clearTimeout(saveST); saveST = setTimeout(() => db.set('settings', S), 300); }
+
+/* ---------- AI calls ---------- */
+async function api(path, body) {
+  let r;
+  try { r = await fetch('/api/' + path, { method: 'POST', headers: { 'content-type': 'application/json', 'x-app-key': S.passcode || '' }, body: JSON.stringify(body) }); }
+  catch { throw new Error('No connection to the AI server. Check your internet. If you opened the file directly, open your Vercel link instead.'); }
+  const j = await r.json().catch(() => null);
+  if (!r.ok) {
+    if (r.status === 404 || !j) throw new Error('AI server not found. Open the app from your Vercel link (not the file) so the AI features work.');
+    throw new Error(j.error || 'Error ' + r.status);
+  }
+  return j;
+}
+
+/* ---------- navigation ---------- */
+const STEPS = ['visit', 'capture', 'measure', 'concept', 'quote'];
+function go(name, push = true) {
+  if ((STEPS.includes(name) || name === 'preview') && !V) name = 'home';
+  current = name;
+  document.querySelectorAll('.screen').forEach(s => s.hidden = s.id !== 's-' + name);
+  render(name);
+  window.scrollTo(0, 0);
+  if (push) try { history.pushState({ s: name }, '', '#' + name); } catch {}
+}
+window.addEventListener('popstate', e => go((e.state && e.state.s) || 'home', false));
+function render(name = current) {
+  ({ home: renderHome, visit: renderVisit, capture: renderCapture, measure: renderMeasure, concept: renderConcept, quote: renderQuote, preview: renderPreview, settings: renderSettings })[name]();
+  document.querySelectorAll('.progress').forEach(nav => {
+    const st = +nav.dataset.step;
+    nav.innerHTML = STEPS.map((s, i) => `<button data-go="${s}" class="${i < st ? 'on' : ''}" aria-label="Step ${i + 1}: ${s}"><i></i></button>`).join('');
+  });
+}
+
+/* ---------- HOME ---------- */
+let visitsCache = [];
+async function renderHome() {
+  $('#homeCo').textContent = S.coName || 'Your company';
+  visitsCache = ((await db.all()) || []).filter(v => v && v.kind === 'visit').sort((a, b) => b.updated - a.updated);
+  const t = today();
+  const todayN = visitsCache.filter(v => v.date === t).length;
+  const toSend = visitsCache.filter(v => v.lines.length && v.status !== 'sent').length;
+  const sent = visitsCache.filter(v => v.status === 'sent').length;
+  const rows = visitsCache.map(v => {
+    const tag = v.status === 'sent' ? '<span class="tag">Sent</span>' : v.lines.length ? '<span class="tag sun">Quote ready</span>' : '<span class="tag grey">Draft</span>';
+    const total = v.lines.length ? ' · ' + rm(totals(v).total) : '';
+    return `<div class="row"><button class="visit grow" data-act="open" data-id="${v.id}">
+      <span class="grow"><span class="label" style="display:block;font-size:15px">${esc(v.client || 'Untitled visit')}</span>
+      <span class="small">${esc(v.address || v.propertyType || 'No address yet')}</span><br><span class="small">${fmtDate(v.date || v.created)}${esc(total)}</span></span>${tag}</button>
+      <button class="iconbtn sm" data-act="delvisit" data-id="${v.id}" aria-label="Delete visit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg></button></div>`;
+  }).join('');
+  $('#b-home').innerHTML = `
+    <button class="hero" data-act="new">
+      <span class="plus"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#15211B" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+      <span style="display:flex;flex-direction:column;gap:4px"><h2 style="font-size:22px">Start new site visit</h2><p>Photos, client notes, AI concept and quotation, all before you leave the site.</p></span>
+    </button>
+    <div class="stats"><div><strong>${todayN}</strong><span class="small">Visits today</span></div><div><strong>${toSend}</strong><span class="small">Quotes to send</span></div><div><strong>${sent}</strong><span class="small">Sent</span></div></div>
+    <div class="eyebrow">Your visits</div>
+    <div class="stack">${rows || '<div class="empty">No visits yet. Tap <b>Start new site visit</b> when you arrive at your next site.</div>'}</div>
+    ${S.rateCardSample ? '<div class="empty" style="background:var(--sun-soft);color:var(--sun-ink)"><b>Using sample rates.</b> Put your own prices in Settings → Rate card before sending real quotes.</div>' : ''}`;
+}
+
+/* ---------- STEP 1 ---------- */
+function renderVisit() {
+  $('#b-visit').innerHTML = `
+    <div class="field"><label class="label" for="f-client">Client name</label><input class="in" id="f-client" data-k="client" value="${esc(V.client)}" placeholder="e.g. Mrs. Tan / Residensi ABC JMB" autocomplete="off"></div>
+    <div class="field"><label class="label" for="f-phone">WhatsApp number</label><input class="in" id="f-phone" data-k="phone" inputmode="tel" value="${esc(V.phone)}" placeholder="+60 12-345 6789"></div>
+    <div class="field"><label class="label" for="f-addr">Site address</label>
+      <div class="row"><input class="in" id="f-addr" data-k="address" value="${esc(V.address)}" placeholder="Street, area, city">
+      <button class="iconbtn" style="border-radius:12px;width:46px;height:46px;background:var(--forest-soft);border:none" data-act="gps" aria-label="Pin my GPS location"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1E5A3C" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/><circle cx="12" cy="12" r="7"/></svg></button></div>
+      ${V.gps ? `<a class="small" href="https://maps.google.com/?q=${V.gps.lat},${V.gps.lng}" target="_blank" rel="noopener">Pinned ${V.gps.lat.toFixed(5)}, ${V.gps.lng.toFixed(5)} · open in Maps</a>` : '<span class="small">Tap the pin to save the GPS location of the site.</span>'}
+    </div>
+    <div class="field"><label class="label" for="f-date">Visit date</label><input class="in" type="date" id="f-date" data-k="date" value="${esc(V.date)}"></div>
+    <div class="field"><span class="label">Property type</span>
+      <div class="chips">${PTYPES.map(p => `<button class="chip" data-act="set" data-k="propertyType" data-v="${esc(p)}" aria-pressed="${V.propertyType === p}">${esc(p)}</button>`).join('')}</div></div>
+    <div class="field"><span class="label">Budget (if shared)</span>
+      <div class="pills">${BUDGETS.map(p => `<button class="pill" data-act="set" data-k="budget" data-v="${esc(p)}" aria-pressed="${V.budget === p}">${esc(p)}</button>`).join('')}</div></div>`;
+}
+
+/* ---------- STEP 2: photos + recording ---------- */
+const rec = { on: false, stream: null, mr: null, segT: null, tickT: null, start: 0, pending: 0, analyser: null, raf: 0, ctx: null, mime: '' };
+function renderCapture() {
+  const zoneNames = [...new Set([...V.zones.map(z => z.name), ...ZONE_HINTS])];
+  const photos = V.photos.map(p => `<div class="ph"><div class="img"><img src="${p.data}" alt="Site photo ${esc(p.zone)}"><button class="x" data-act="delphoto" data-id="${p.id}" aria-label="Delete photo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></div>
+    <input class="in" list="zonelist" data-col="photos" data-id="${p.id}" data-k="zone" value="${esc(p.zone)}" placeholder="Tag zone, e.g. Front yard" aria-label="Zone for this photo"></div>`).join('');
+  const recSub = rec.on ? 'Text appears about every 30 seconds' : rec.pending ? `Turning ${rec.pending} clip${rec.pending > 1 ? 's' : ''} into text…` : V.transcript ? 'Tap to record more' : 'Ask permission first. Works in English and BM.';
+  $('#b-capture').innerHTML = `
+    <datalist id="zonelist">${zoneNames.map(z => `<option value="${esc(z)}">`).join('')}</datalist>
+    <div class="field">
+      <div class="row between"><span class="label">Site photos</span><span class="small">${V.photos.length} taken · tag each zone</span></div>
+      <div class="photos">${photos}
+        <button class="addph" data-act="cam"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3z"/><circle cx="12" cy="13" r="3"/></svg>Take photo</button>
+        <button class="addph" data-act="gal" style="border-style:solid;border-width:1px;border-color:var(--field);color:var(--ink)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>From gallery</button>
+      </div>
+    </div>
+    <div class="card stack" style="border-radius:18px">
+      <div class="row" style="gap:14px">
+        <button class="mic ${rec.on ? 'on' : ''}" data-act="rec" aria-label="${rec.on ? 'Stop recording' : 'Start recording'}">${rec.on
+          ? '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2" fill="#fff"/></svg>'
+          : '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="9" y="2" width="6" height="12" rx="3"/><path d="M19 10v1a7 7 0 0 1-14 0v-1M12 18v4"/></svg>'}</button>
+        <div class="grow"><div class="label" style="font-size:15px" id="recTitle">${rec.on ? 'Recording ' + clock() : 'Record client conversation'}</div><div class="small" id="recSub">${recSub}</div></div>
+        ${rec.pending ? '<div class="spin sm"></div>' : ''}
+      </div>
+      <div class="wave ${rec.on ? 'on' : ''}" id="wave">${'<b></b>'.repeat(40)}</div>
+    </div>
+    <div class="field">
+      <label class="label" for="f-tr">Conversation text</label>
+      <textarea class="ta" id="f-tr" data-k="transcript" rows="5" placeholder="Your recording appears here as text. You can also type or paste notes yourself.">${esc(V.transcript)}</textarea>
+      <button class="secondary" data-act="notes" ${busy.notes ? 'disabled' : ''}>${busy.notes ? '<span class="spin sm"></span> Reading the conversation…' : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1E5A3C" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"/></svg> Update key notes from text'}</button>
+    </div>
+    <div class="field">
+      <span class="label">Key notes</span>
+      ${V.summary ? `<div class="card small" style="color:var(--ink);font-size:14px;line-height:1.45">${esc(V.summary)}</div>` : ''}
+      <div class="card notecard" style="padding:4px 12px">${V.notes.length ? V.notes.map(n => `<div class="note">
+        <select class="sel" data-col="notes" data-id="${n.id}" data-k="label" aria-label="Note type">${NOTE_LABELS.map(l => `<option ${l === n.label ? 'selected' : ''}>${l}</option>`).join('')}</select>
+        <input class="in sm" data-col="notes" data-id="${n.id}" data-k="text" value="${esc(n.text)}" aria-label="Note">
+        <button class="iconbtn sm" data-act="del" data-col="notes" data-id="${n.id}" aria-label="Delete note">×</button></div>`).join('')
+        : '<p class="small" style="margin:10px 0">Key notes appear here after recording. You can also add them by hand.</p>'}</div>
+      <button class="link" data-act="addnote">+ Add note</button>
+    </div>`;
+  if (rec.on) drawWave();
+}
+function clock() { const s = Math.floor((Date.now() - rec.start) / 1000); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }
+function pickMime() { return ['audio/webm;codecs=opus', 'audio/mp4', 'audio/webm', 'audio/ogg'].find(m => window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) || ''; }
+async function startRec() {
+  if (!navigator.mediaDevices || !window.MediaRecorder) return toast('Recording is not supported in this browser. Type the notes instead.', true);
+  try { rec.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } }); }
+  catch { return toast('Microphone blocked. Allow microphone access for this site in your browser settings.', true); }
+  rec.on = true; rec.start = Date.now(); rec.mime = pickMime();
+  try {
+    rec.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = rec.ctx.createMediaStreamSource(rec.stream); rec.analyser = rec.ctx.createAnalyser(); rec.analyser.fftSize = 128; src.connect(rec.analyser);
+  } catch { rec.analyser = null; }
+  nextSegment();
+  rec.tickT = setInterval(() => { const t = $('#recTitle'); if (t && rec.on) t.textContent = 'Recording ' + clock(); }, 1000);
+  if (current === 'capture') renderCapture();
+}
+function nextSegment() {
+  const opts = { audioBitsPerSecond: 32000 }; if (rec.mime) opts.mimeType = rec.mime;
+  let mr; try { mr = new MediaRecorder(rec.stream, opts); } catch { mr = new MediaRecorder(rec.stream); }
+  const chunks = [];
+  mr.ondataavailable = e => e.data && e.data.size && chunks.push(e.data);
+  mr.onstop = () => {
+    const blob = new Blob(chunks, { type: mr.mimeType || rec.mime || 'audio/webm' });
+    sendClip(blob);
+    if (rec.on) nextSegment(); else finishRec();
+  };
+  mr.start(); rec.mr = mr;
+  rec.segT = setTimeout(() => mr.state === 'recording' && mr.stop(), 30000);
+}
+function stopRec() { rec.on = false; clearTimeout(rec.segT); clearInterval(rec.tickT); if (rec.mr && rec.mr.state === 'recording') rec.mr.stop(); else finishRec(); }
+function finishRec() {
+  if (rec.stream) rec.stream.getTracks().forEach(t => t.stop());
+  rec.stream = null; cancelAnimationFrame(rec.raf); try { rec.ctx && rec.ctx.close(); } catch {}
+  if (current === 'capture') renderCapture();
+}
+function drawWave() {
+  cancelAnimationFrame(rec.raf);
+  const bars = document.querySelectorAll('#wave b');
+  if (!rec.analyser || !bars.length) return;
+  const data = new Uint8Array(rec.analyser.frequencyBinCount);
+  const loop = () => { if (!rec.on) return; rec.analyser.getByteFrequencyData(data); bars.forEach((b, i) => b.style.height = Math.max(4, (data[i % data.length] / 255) * 30) + 'px'); rec.raf = requestAnimationFrame(loop); };
+  loop();
+}
+const blobToB64 = blob => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(blob); });
+async function sendClip(blob) {
+  if (blob.size < 2000) return;
+  rec.pending++; if (current === 'capture') updateRecSub();
+  const visit = V;
+  try {
+    const { text } = await api('transcribe', { audio: await blobToB64(blob), mime: blob.type });
+    if (text) { visit.transcript = (visit.transcript ? visit.transcript.trim() + ' ' : '') + text; save(); const ta = $('#f-tr'); if (ta && V === visit) { ta.value = visit.transcript; ta.scrollTop = ta.scrollHeight; } }
+  } catch (e) { toast(e.message, true); }
+  rec.pending--;
+  if (current === 'capture' && V === visit) updateRecSub();
+  if (!rec.on && rec.pending === 0 && V === visit && visit.transcript.trim()) runNotes();
+}
+function updateRecSub() { if (!rec.on) renderCapture(); else { const s = $('#recSub'); if (s) s.textContent = rec.pending ? `Recording · turning ${rec.pending} clip(s) into text…` : 'Text appears about every 30 seconds'; } }
+async function runNotes() {
+  if (!V.transcript.trim()) return toast('Record the conversation or type some notes first.', true);
+  busy.notes = true; if (current === 'capture') renderCapture();
+  const visit = V;
+  try {
+    const out = await api('notes', { transcript: visit.transcript, visit: { client: visit.client, propertyType: visit.propertyType, budget: visit.budget }, zones: visit.zones });
+    const manual = visit.notes.filter(n => n.manual);
+    visit.notes = [...out.notes.map(n => ({ id: uid(), label: NOTE_LABELS.includes(String(n.label).toUpperCase()) ? String(n.label).toUpperCase() : 'OTHER', text: n.text || '' })), ...manual];
+    visit.summary = out.summary || visit.summary;
+    const have = new Set(visit.zones.map(z => z.name.toLowerCase()));
+    let added = 0;
+    out.zones.forEach(z => { if (z.name && !have.has(String(z.name).toLowerCase())) { visit.zones.push({ id: uid(), name: z.name, work: z.work || '', area: typeof z.area === 'number' ? z.area : null, tags: Array.isArray(z.tags) ? z.tags : [] }); added++; } });
+    save(); toast('Key notes updated' + (added ? ` · ${added} zone${added > 1 ? 's' : ''} suggested` : ''));
+  } catch (e) { toast(e.message, true); }
+  busy.notes = false; if (current === 'capture' || current === 'measure') render();
+}
+
+/* ---------- photos ---------- */
+function fileToJpeg(file, max = 1280, q = 0.82) {
+  return new Promise((res, rej) => {
+    const url = URL.createObjectURL(file); const img = new Image();
+    img.onload = () => { let w = img.naturalWidth, h = img.naturalHeight; const s = Math.min(1, max / Math.max(w, h)); w = Math.round(w * s); h = Math.round(h * s);
+      const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h); URL.revokeObjectURL(url); res({ data: c.toDataURL('image/jpeg', q), w, h }); };
+    img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('Could not read that image. Try a JPG or PNG.')); };
+    img.src = url;
+  });
+}
+async function addPhotos(files) {
+  for (const f of files) {
+    try { const p = await fileToJpeg(f); V.photos.push({ id: uid(), data: p.data, w: p.w, h: p.h, zone: '' }); } catch (e) { toast(e.message, true); }
+  }
+  if (!V.photoId && V.photos[0]) V.photoId = V.photos[0].id;
+  save(); render();
+}
+$('#camIn').addEventListener('change', e => { addPhotos([...e.target.files]); e.target.value = ''; });
+$('#galIn').addEventListener('change', e => { addPhotos([...e.target.files]); e.target.value = ''; });
+$('#logoIn').addEventListener('change', async e => { const f = e.target.files[0]; e.target.value = ''; if (!f) return; try { S.logo = (await fileToJpeg(f, 400, 0.9)).data; saveS(); renderSettings(); } catch (er) { toast(er.message, true); } });
+
+/* ---------- STEP 3 ---------- */
+const areaTotal = () => V.zones.reduce((s, z) => s + (+z.area || 0), 0);
+function renderMeasure() {
+  $('#b-measure').innerHTML = `
+    <div class="dark"><div><div class="k">TOTAL WORK AREA</div><div class="v"><span id="areaTotal">${n2(areaTotal()).replace(/\.00$/, '')}</span> m²</div></div><span class="small" style="color:#B9C7BE;text-align:right">${V.zones.length} zone${V.zones.length === 1 ? '' : 's'}</span></div>
+    ${V.zones.length ? '' : `<div class="empty">No zones yet. Add each area you will work on, with its size in square metres. ${V.transcript ? 'Or let AI suggest zones from the conversation.' : ''}</div>`}
+    ${V.zones.map(z => { const pc = V.photos.filter(p => p.zone && p.zone.toLowerCase() === z.name.toLowerCase()).length; return `<div class="card zone">
+      <div class="row"><input class="in sm grow" style="font-weight:600" data-col="zones" data-id="${z.id}" data-k="name" value="${esc(z.name)}" placeholder="Zone name" aria-label="Zone name">
+      <button class="iconbtn sm" data-act="del" data-col="zones" data-id="${z.id}" aria-label="Delete zone">×</button></div>
+      <input class="in sm" data-col="zones" data-id="${z.id}" data-k="work" value="${esc(z.work)}" placeholder="Work, e.g. turfing + planting beds" aria-label="Work in this zone">
+      <div class="row between wrap"><span class="small">${pc ? pc + ' photo' + (pc > 1 ? 's' : '') : 'No photos tagged'}</span>
+        <div class="stepper"><button data-act="area" data-id="${z.id}" data-d="-1" aria-label="Decrease area">−</button>
+        <input class="in sm" type="number" inputmode="decimal" min="0" step="any" data-col="zones" data-id="${z.id}" data-k="area" data-num value="${z.area ?? ''}" placeholder="m²" aria-label="${esc(z.name)} area in square metres">
+        <button data-act="area" data-id="${z.id}" data-d="1" aria-label="Increase area">+</button><span class="small">m²</span></div></div>
+      <input class="in sm" data-col="zones" data-id="${z.id}" data-k="tags" data-list value="${esc((z.tags || []).join(', '))}" placeholder="Materials / plants, comma separated" aria-label="Materials">
+    </div>`; }).join('')}
+    <button class="ghost" data-act="addzone">+ Add zone</button>
+    ${V.transcript ? `<button class="secondary" data-act="notes" ${busy.notes ? 'disabled' : ''}>${busy.notes ? '<span class="spin sm"></span> Reading the conversation…' : 'Suggest zones from the conversation'}</button>` : ''}
+    <p class="small" style="margin:0">Tip: pace it out or use a laser measure. 1 ft² = 0.093 m².</p>`;
+}
+
+/* ---------- STEP 4 ---------- */
+let genTimer;
+function activeConcept() { return V.concepts.find(c => c.id === V.activeConcept) || V.concepts[V.concepts.length - 1]; }
+function renderConcept() {
+  if (!V.photos.length) {
+    $('#b-concept').innerHTML = `<div class="empty">Take at least one site photo first. The AI redesigns your real photo, so the client sees their own site.</div><button class="secondary" data-go="capture">Go to photos</button>`;
+    return;
+  }
+  if (!V.photos.find(p => p.id === V.photoId)) V.photoId = V.photos[0].id;
+  const c = activeConcept();
+  const photo = c ? V.photos.find(p => p.id === c.photoId) : null;
+  const before = c ? (photo ? photo.data : c.before) : null;
+  $('#b-concept').innerHTML = `
+    <div class="field"><span class="label">1. Pick the photo to redesign</span>
+      <div class="thumbs">${V.photos.map(p => `<button class="thumb" data-act="pickphoto" data-id="${p.id}" aria-pressed="${p.id === V.photoId}"><img src="${p.data}" alt="">${p.zone ? `<span class="badge">${esc(p.zone)}</span>` : ''}</button>`).join('')}</div></div>
+    <div class="field"><span class="label">2. Choose a style</span>
+      <div class="chips">${STYLES.map(s => `<button class="chip" data-act="set" data-k="style" data-v="${esc(s)}" aria-pressed="${V.style === s}">${esc(s)}</button>`).join('')}</div>
+      <input class="in sm" data-k="extra" value="${esc(V.extra)}" placeholder="Anything else? e.g. add a pergola, keep the mango tree" aria-label="Extra instructions"></div>
+    <button class="primary" data-act="gen" ${busy.concept ? 'disabled' : ''}>${busy.concept ? '<span class="spin sm light"></span> Designing…' : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E7A93A" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.8L20 10l-6.1 1.2L12 17l-1.9-5.8L4 10l6.1-1.2z"/></svg> Generate concept'}</button>
+    ${busy.concept ? `<div class="loading"><div class="spin"></div><div class="label">Redesigning your photo: ${esc(V.style)}</div><div class="small" id="genClock">Usually 20–50 seconds. Keep this screen open.</div></div>` : ''}
+    ${c && !busy.concept ? `<div class="field"><div class="row between"><span class="label">Before / after</span><span class="small">${esc(c.style)} · drag to compare</span></div>
+      <div class="cmp" id="cmp"><img src="${before}" alt="Site before"><img class="after" src="${c.after}" alt="Design concept after"><div class="handle"></div>
+      <input type="range" min="0" max="100" value="50" id="cmpRange" aria-label="Slide to compare before and after"><span class="lb l">Before</span><span class="lb r">After</span></div>
+      <label class="switch"><span class="small" style="color:var(--ink)">Show this concept in the quotation</span><input type="checkbox" data-col="concepts" data-id="${c.id}" data-k="inQuote" ${c.inQuote ? 'checked' : ''}></label>
+    </div>` : ''}
+    ${V.concepts.length > 1 ? `<div class="field"><span class="label">All concepts (${V.concepts.length})</span><div class="thumbs">${V.concepts.map(x => `<button class="thumb" data-act="pickconcept" data-id="${x.id}" aria-pressed="${c && x.id === c.id}"><img src="${x.after}" alt="${esc(x.style)} concept"><span class="badge">${x.inQuote ? '✓ ' : ''}${esc(x.style.split(' ')[0])}</span></button>`).join('')}</div>
+      ${c ? `<button class="link danger" data-act="delconcept" data-id="${c.id}">Delete this concept</button>` : ''}</div>` : ''}
+    <div class="field">
+      <div class="row between"><span class="label">Plant palette${V.paletteStyle ? ' · ' + esc(V.paletteStyle) : ''}</span>
+        <button class="link" data-act="palette" ${busy.palette ? 'disabled' : ''}>${busy.palette ? 'Working…' : V.plants.length ? 'Regenerate' : 'Suggest with AI'}</button></div>
+      <div class="card" style="padding:4px 12px">${V.plants.length ? V.plants.map(p => `<div class="plant">
+          <div class="stack-s" style="gap:2px"><input class="in sm" style="font-weight:600" data-col="plants" data-id="${p.id}" data-k="name" value="${esc(p.name)}" aria-label="Plant">
+          <span class="small">${esc([p.botanical, p.role, p.zone].filter(Boolean).join(' · '))}</span></div>
+          <input class="in sm" type="number" inputmode="decimal" data-col="plants" data-id="${p.id}" data-k="qty" data-num value="${p.qty ?? ''}" aria-label="Quantity">
+          <input class="in sm" data-col="plants" data-id="${p.id}" data-k="unit" value="${esc(p.unit)}" aria-label="Unit">
+          <button class="iconbtn sm" data-act="del" data-col="plants" data-id="${p.id}" aria-label="Delete plant">×</button></div>`).join('')
+        : `<p class="small" style="margin:10px 0">${busy.palette ? 'Choosing plants for the site…' : 'Plants are suggested when you generate a concept, sized to your zones.'}</p>`}</div>
+      <button class="link" data-act="addplant">+ Add plant</button>
+    </div>`;
+  const r = $('#cmpRange'); if (r) r.addEventListener('input', () => $('#cmp').style.setProperty('--pos', r.value + '%'));
+}
+async function runPalette() {
+  busy.palette = true; render();
+  const visit = V;
+  try {
+    const out = await api('palette', { style: visit.style, extra: visit.extra, notes: visit.notes, zones: visit.zones, visit: { propertyType: visit.propertyType } });
+    visit.plants = out.plants.map(p => ({ id: uid(), name: p.name || '', botanical: p.botanical || '', role: p.role || '', zone: p.zone || '', qty: +p.qty || null, unit: p.unit || 'nos' }));
+    visit.paletteStyle = visit.style; save();
+  } catch (e) { toast(e.message, true); }
+  busy.palette = false; if (V === visit && current === 'concept') render();
+}
+async function runConcept() {
+  const photo = V.photos.find(p => p.id === V.photoId) || V.photos[0];
+  if (!photo) return toast('Add a site photo first.', true);
+  busy.concept = true; render();
+  const t0 = Date.now(); clearInterval(genTimer);
+  genTimer = setInterval(() => { const el = $('#genClock'); if (el) el.textContent = `${Math.round((Date.now() - t0) / 1000)} s · usually 20–50 seconds. Keep this screen open.`; }, 1000);
+  const visit = V;
+  const pal = (!visit.plants.length || visit.paletteStyle !== visit.style) ? runPalette() : Promise.resolve();
+  const size = photo.w > photo.h * 1.15 ? '1536x1024' : photo.h > photo.w * 1.15 ? '1024x1536' : '1024x1024';
+  try {
+    const out = await api('concept', { image: photo.data, style: visit.style, extra: visit.extra, notes: visit.notes, plants: visit.plants, zone: photo.zone, size });
+    visit.concepts.forEach(x => { if (x.photoId === photo.id) x.inQuote = false; });
+    const c = { id: uid(), photoId: photo.id, before: photo.data, after: out.image, style: visit.style, created: Date.now(), inQuote: true };
+    visit.concepts.push(c); visit.activeConcept = c.id; save();
+    toast('Concept ready');
+  } catch (e) { toast(e.message, true); }
+  clearInterval(genTimer); busy.concept = false;
+  await pal;
+  if (V === visit && current === 'concept') render();
+}
+
+/* ---------- STEP 5 ---------- */
+function totals(v = V) {
+  const m = (+v.margin || 0) / 100;
+  const cost = v.lines.reduce((s, l) => s + (+l.qty || 0) * (+l.rate || 0), 0);
+  const client = v.lines.reduce((s, l) => s + (+l.qty || 0) * round2((+l.rate || 0) * (1 + m)), 0);
+  const sst = v.sst ? client * (+S.sstRate || 0) / 100 : 0;
+  return { cost, client, profit: client - cost, sst, total: client + sst, deposit: (client + sst) * (+S.deposit || 0) / 100 };
+}
+const round2 = n => Math.round(n * 100) / 100;
+function renderQuote() {
+  $('#qStep').textContent = 'STEP 5 OF 5' + (V.quoteNo ? ' · ' + V.quoteNo : '');
+  const t = totals();
+  const lines = V.lines.map(l => `<div class="line">
+      <div class="row"><input class="in sm grow" style="font-weight:600" data-col="lines" data-id="${l.id}" data-k="description" value="${esc(l.description)}" placeholder="Item" aria-label="Item">
+      <button class="iconbtn sm" data-act="del" data-col="lines" data-id="${l.id}" aria-label="Delete line">×</button></div>
+      <input class="in sm" data-col="lines" data-id="${l.id}" data-k="detail" value="${esc(l.detail)}" placeholder="Detail (optional)" aria-label="Detail">
+      <div class="lgrid">
+        <input class="in sm" type="number" inputmode="decimal" data-col="lines" data-id="${l.id}" data-k="qty" data-num value="${l.qty ?? ''}" aria-label="Quantity">
+        <input class="in sm" data-col="lines" data-id="${l.id}" data-k="unit" value="${esc(l.unit)}" aria-label="Unit">
+        <div class="row" style="gap:4px"><span class="small">RM</span><input class="in sm" type="number" inputmode="decimal" data-col="lines" data-id="${l.id}" data-k="rate" data-num value="${l.rate ?? ''}" aria-label="Cost rate per unit"></div>
+        <span class="num" id="amt-${l.id}" style="font-size:14px">${rm((+l.qty || 0) * (+l.rate || 0))}</span>
+      </div>
+      ${l.fromRateCard === false ? '<span class="tag sun" style="align-self:flex-start">AI estimate · check rate</span>' : ''}
+    </div>`).join('');
+  $('#b-quote').innerHTML = `
+    ${S.rateCardSample ? '<div class="empty" style="background:var(--sun-soft);color:var(--sun-ink);padding:12px 14px"><b>Sample rate card in use.</b> Update it in Settings for real prices.</div>' : ''}
+    ${V.lines.length ? `<div class="row between"><span class="label">Items (your cost rates)</span><button class="link" data-act="buildquote" ${busy.quote ? 'disabled' : ''}>${busy.quote ? 'Working…' : confirmRebuild ? 'Tap again to replace all' : 'Rebuild with AI'}</button></div>
+      <div class="card" style="padding:0 12px">${lines}</div>`
+      : `<div class="empty">Build the quotation from your zones, plant palette and rate card. You can edit every line after.</div>
+      <button class="primary" data-act="buildquote" ${busy.quote ? 'disabled' : ''}>${busy.quote ? '<span class="spin sm light"></span> Building quotation…' : 'Build quotation with AI'}</button>`}
+    <button class="ghost" data-act="addline">+ Add line</button>
+    <div class="card stack">
+      <div class="row between"><span class="label">Margin</span><span class="small">Hidden from the client</span></div>
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px">${[0, 10, 15, 20, 25, 30].slice(1).map(m => `<button class="chip" data-act="margin" data-v="${m}" aria-pressed="${+V.margin === m}">${m}%</button>`).join('')}</div>
+      <label class="switch"><span class="small" style="color:var(--ink)">Add SST (${S.sstRate}%)</span><input type="checkbox" data-k="sst" ${V.sst ? 'checked' : ''}></label>
+      <div class="small" style="font-variant-numeric:tabular-nums">Cost <span id="tCost">${rm(t.cost)}</span> · profit <span id="tProfit">${rm(t.profit)}</span></div>
+    </div>
+    <div class="dark"><div><div class="k">CLIENT TOTAL</div><div class="v" id="tTotal">${rm(t.total)}</div></div><div class="small" style="color:#B9C7BE;text-align:right">Valid ${S.validity} days<br>${S.deposit}% deposit</div></div>
+    <details ${V.assumptions.length ? 'open' : ''}><summary>Assumptions and exclusions</summary>
+      <div class="stack" style="margin-top:8px">
+        <div class="field"><label class="label" for="f-as">Assumptions (one per line)</label><textarea class="ta" id="f-as" data-k="assumptions" data-lines>${esc(V.assumptions.join('\n'))}</textarea></div>
+        <div class="field"><label class="label" for="f-ex">Exclusions (one per line)</label><textarea class="ta" id="f-ex" data-k="exclusions" data-lines>${esc(V.exclusions.join('\n'))}</textarea></div>
+      </div></details>`;
+}
+let confirmRebuild = false, confirmT;
+async function runQuote() {
+  if (V.lines.length && !confirmRebuild) { confirmRebuild = true; clearTimeout(confirmT); confirmT = setTimeout(() => { confirmRebuild = false; if (current === 'quote') renderQuote(); }, 4000); return renderQuote(); }
+  confirmRebuild = false;
+  if (!V.zones.length && !V.plants.length) return toast('Add zones (step 3) or a plant palette (step 4) first.', true);
+  busy.quote = true; renderQuote();
+  const visit = V;
+  try {
+    const out = await api('quote', { visit: { propertyType: visit.propertyType, address: visit.address }, notes: visit.notes, zones: visit.zones, plants: visit.plants, rateCard: S.rateCard.map(r => ({ name: r.name, unit: r.unit, rate: r.rate })), style: visit.style });
+    visit.lines = out.lines.map(l => ({ id: uid(), description: l.description || '', detail: l.detail || '', qty: +l.qty || 0, unit: l.unit || '', rate: +l.rate || 0, fromRateCard: l.fromRateCard !== false }));
+    visit.assumptions = out.assumptions; visit.exclusions = out.exclusions;
+    if (!visit.quoteNo) { visit.quoteNo = `QT-${new Date().getFullYear()}-${String(S.seq).padStart(4, '0')}`; S.seq++; saveS(); }
+    save(); toast('Quotation built. Check the AI estimates.');
+  } catch (e) { toast(e.message, true); }
+  busy.quote = false; if (V === visit && current === 'quote') renderQuote();
+}
+function updateQuoteNumbers() {
+  const t = totals();
+  V.lines.forEach(l => { const a = $('#amt-' + l.id); if (a) a.textContent = rm((+l.qty || 0) * (+l.rate || 0)); });
+  const set = (id, v) => { const e = $('#' + id); if (e) e.textContent = v; };
+  set('tCost', rm(t.cost)); set('tProfit', rm(t.profit)); set('tTotal', rm(t.total));
+}
+
+/* ---------- PREVIEW ---------- */
+function waNumber(p) { let d = String(p || '').replace(/\D/g, ''); if (d.startsWith('0')) d = '6' + d; return d; }
+function waText() {
+  const t = totals();
+  return `Hi ${V.client || ''}, thank you for your time at the site today.\n\nOur quotation ${V.quoteNo || ''} for the ${V.style.toLowerCase()} landscape works comes to ${rm(t.total)}${V.sst ? ' incl. SST' : ''}, valid for ${S.validity} days.\n\nI am sending the PDF with the design concept now. Happy to go through it any time.\n\n${S.coName}${S.coPhone ? '\n' + S.coPhone : ''}`;
+}
+function renderPreview() {
+  if (!V.quoteNo) { V.quoteNo = `QT-${new Date().getFullYear()}-${String(S.seq).padStart(4, '0')}`; S.seq++; saveS(); save(); }
+  const t = totals(); const m = (+V.margin || 0) / 100;
+  const qDate = V.date || today();
+  const valid = new Date(new Date(qDate).getTime() + (+S.validity || 30) * 864e5).toISOString().slice(0, 10);
+  const concepts = V.concepts.filter(c => c.inQuote);
+  const rows = V.lines.map((l, i) => { const r = round2((+l.rate || 0) * (1 + m)); return `<tr><td>${i + 1}</td><td>${esc(l.description)}${l.detail ? `<div class="det">${esc(l.detail)}</div>` : ''}</td><td class="r">${esc(l.qty)}</td><td>${esc(l.unit)}</td><td class="r">${n2(r)}</td><td class="r">${n2((+l.qty || 0) * r)}</td></tr>`; }).join('');
+  const list = arr => arr.length ? '<ul>' + arr.map(a => `<li>${esc(a)}</li>`).join('') + '</ul>' : '';
+  $('#doc').innerHTML = `
+    <div class="dh">
+      <div class="co">${S.logo ? `<img src="${S.logo}" alt="">` : ''}<div><strong>${esc(S.coName)}</strong>${S.coReg ? `<div>${esc(S.coReg)}</div>` : ''}<div style="white-space:pre-line">${esc(S.coAddress)}</div><div>${esc([S.coPhone, S.coEmail].filter(Boolean).join(' · '))}</div></div></div>
+      <div class="meta"><h1>QUOTATION</h1><div>No: <b>${esc(V.quoteNo)}</b></div><div>Date: ${fmtDate(qDate)}</div><div>Valid until: ${fmtDate(valid)}</div></div>
+    </div>
+    <div class="two">
+      <div><div class="lab">Prepared for</div><b>${esc(V.client || '—')}</b><div>${esc(V.address)}</div><div>${esc(V.phone)}</div></div>
+      <div><div class="lab">Project</div><b>${esc(V.style)} landscape works</b><div>${esc(V.propertyType)}${V.zones.length ? ' · ' + n2(areaTotal()).replace(/\.00$/, '') + ' m² across ' + V.zones.length + ' zone' + (V.zones.length > 1 ? 's' : '') : ''}</div></div>
+    </div>
+    ${V.summary ? `<div class="sec"><div class="lab">Scope</div>${esc(V.summary)}</div>` : ''}
+    ${V.lines.length ? `<table><thead><tr><th>#</th><th>Description</th><th class="r">Qty</th><th>Unit</th><th class="r">Rate (RM)</th><th class="r">Amount (RM)</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="tot"><div><span>Subtotal</span><span>${n2(t.client)}</span></div>${V.sst ? `<div><span>SST ${S.sstRate}%</span><span>${n2(t.sst)}</span></div>` : ''}<div class="g"><span>Total</span><span>${rm(t.total)}</span></div><div><span>Deposit ${S.deposit}%</span><span>${rm(t.deposit)}</span></div></div>`
+    : '<p class="sec" style="color:#B3261E">No line items yet. Go back and build the quotation.</p>'}
+    ${V.assumptions.length ? `<div class="sec"><div class="lab">Assumptions</div>${list(V.assumptions)}</div>` : ''}
+    ${V.exclusions.length ? `<div class="sec"><div class="lab">Exclusions</div>${list(V.exclusions)}</div>` : ''}
+    ${S.terms ? `<div class="sec"><div class="lab">Terms</div>${list(S.terms.split('\n').filter(Boolean))}</div>` : ''}
+    <div class="sign"><div>For ${esc(S.coName)}</div><div>Accepted by client: name, signature and date</div></div>
+    ${concepts.length || V.plants.length ? `<div class="pb">
+      ${concepts.length ? `<div class="lab">Design concept</div>${concepts.map(c => { const p = V.photos.find(x => x.id === c.photoId); return `<div class="pics"><figure><img src="${p ? p.data : c.before}" alt=""><figcaption>Existing site${p && p.zone ? ' · ' + esc(p.zone) : ''}</figcaption></figure><figure><img src="${c.after}" alt=""><figcaption>Proposed: ${esc(c.style)} (artist's impression)</figcaption></figure></div>`; }).join('')}` : ''}
+      ${V.plants.length ? `<div class="sec"><div class="lab">Plant palette</div><table><thead><tr><th>Plant</th><th>Botanical name</th><th>Use</th><th class="r">Qty</th></tr></thead><tbody>${V.plants.map(p => `<tr><td>${esc(p.name)}</td><td><i>${esc(p.botanical)}</i></td><td>${esc([p.role, p.zone].filter(Boolean).join(' · '))}</td><td class="r">${esc(p.qty ?? '')} ${esc(p.unit)}</td></tr>`).join('')}</tbody></table></div>` : ''}
+    </div>` : ''}`;
+  const wa = $('#waLink'); const num = waNumber(V.phone);
+  wa.href = 'https://wa.me/' + (num || '') + '?text=' + encodeURIComponent(waText());
+}
+async function shareQuote() {
+  const text = waText();
+  const c = V.concepts.filter(x => x.inQuote).slice(-1)[0];
+  try {
+    if (c && navigator.canShare) {
+      const blob = await (await fetch(c.after)).blob();
+      const file = new File([blob], `${V.quoteNo || 'concept'}-concept.jpg`, { type: 'image/jpeg' });
+      if (navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], text, title: 'Quotation ' + V.quoteNo }); return; }
+    }
+    if (navigator.share) { await navigator.share({ text, title: 'Quotation ' + V.quoteNo }); return; }
+    await navigator.clipboard.writeText(text); toast('Message copied');
+  } catch (e) { if (e && e.name !== 'AbortError') toast('Sharing is not available here. Use Save PDF instead.', true); }
+}
+
+/* ---------- SETTINGS ---------- */
+function renderSettings() {
+  const f = (k, label, ph = '', type = 'text') => `<div class="field"><label class="label" for="s-${k}">${label}</label><input class="in" id="s-${k}" type="${type}" data-scope="s" data-k="${k}" ${type === 'number' ? 'data-num inputmode="decimal"' : ''} value="${esc(S[k])}" placeholder="${ph}"></div>`;
+  $('#b-settings').innerHTML = `
+    <div class="eyebrow">Company (shown on quotations)</div>
+    <div class="row" style="gap:14px"><div style="width:72px;height:72px;border-radius:14px;background:var(--card);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">${S.logo ? `<img src="${S.logo}" alt="Logo" style="width:100%;height:100%;object-fit:contain">` : '<span class="small">No logo</span>'}</div>
+      <div class="stack-s"><button class="secondary" data-act="logo">${S.logo ? 'Change logo' : 'Upload logo'}</button>${S.logo ? '<button class="link danger" data-act="dellogo">Remove logo</button>' : ''}</div></div>
+    ${f('coName', 'Company name')}${f('coReg', 'Registration no.', 'e.g. 202001012345 (1234567-X)')}
+    <div class="field"><label class="label" for="s-coAddress">Address</label><textarea class="ta" id="s-coAddress" data-scope="s" data-k="coAddress" rows="3">${esc(S.coAddress)}</textarea></div>
+    ${f('coPhone', 'Phone', '+60 …', 'tel')}${f('coEmail', 'Email', '', 'email')}
+    <div class="eyebrow" style="margin-top:8px">Quotation defaults</div>
+    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">${f('margin', 'Default margin %', '', 'number')}${f('sstRate', 'SST rate %', '', 'number')}${f('validity', 'Valid for (days)', '', 'number')}${f('deposit', 'Deposit %', '', 'number')}</div>
+    <div class="field"><label class="label" for="s-terms">Terms (one per line)</label><textarea class="ta" id="s-terms" data-scope="s" data-k="terms" rows="5">${esc(S.terms)}</textarea></div>
+    <div class="row between" style="margin-top:8px"><div class="eyebrow">Rate card (your cost prices)</div>${S.rateCardSample ? '<span class="tag sun">Sample</span>' : ''}</div>
+    <p class="small" style="margin:0">The AI uses these exact rates when it builds a quotation. Anything not listed is marked as an estimate.</p>
+    <div class="card stack" style="padding:12px">
+      <div class="rate small"><span>Item</span><span>Unit</span><span>RM</span><span></span></div>
+      ${S.rateCard.map(r => `<div class="rate"><input class="in sm" data-scope="s" data-col="rateCard" data-id="${r.id}" data-k="name" value="${esc(r.name)}" aria-label="Item">
+        <input class="in sm" data-scope="s" data-col="rateCard" data-id="${r.id}" data-k="unit" value="${esc(r.unit)}" aria-label="Unit">
+        <input class="in sm" type="number" inputmode="decimal" data-scope="s" data-col="rateCard" data-id="${r.id}" data-k="rate" data-num value="${r.rate ?? ''}" aria-label="Rate">
+        <button class="iconbtn sm" data-act="delrate" data-id="${r.id}" aria-label="Delete rate">×</button></div>`).join('')}
+      <button class="link" data-act="addrate" style="align-self:flex-start">+ Add rate</button>
+    </div>
+    <div class="eyebrow" style="margin-top:8px">AI connection</div>
+    ${f('passcode', 'App passcode (only if you set APP_PASSCODE in Vercel)', '', 'password')}
+    <button class="secondary" data-act="ping">Check AI connection</button>
+    <div id="pingOut" class="small"></div>
+    <p class="small" style="margin:0">Visits, photos and settings are saved on this phone only. Clearing browser data deletes them.</p>`;
+}
+
+/* ---------- events ---------- */
+function setFromInput(t) {
+  if (!t.dataset || !t.dataset.k) return;
+  const obj = t.dataset.scope === 's' ? S : V; if (!obj) return;
+  let target = obj;
+  if (t.dataset.col) { target = (obj[t.dataset.col] || []).find(x => x.id === t.dataset.id); if (!target) return; }
+  let v = t.type === 'checkbox' ? t.checked : t.value;
+  if ('num' in t.dataset) v = v === '' ? null : parseFloat(v);
+  if ('lines' in t.dataset) v = v.split('\n').map(s => s.trim()).filter(Boolean);
+  if ('list' in t.dataset) v = v.split(',').map(s => s.trim()).filter(Boolean);
+  target[t.dataset.k] = v;
+  if (t.dataset.col === 'rateCard') S.rateCardSample = false;
+  if (t.dataset.col === 'notes') target.manual = true;
+  obj === S ? saveS() : save();
+  if (t.dataset.col === 'zones' && t.dataset.k === 'area') { const e = $('#areaTotal'); if (e) e.textContent = n2(areaTotal()).replace(/\.00$/, ''); }
+  if (current === 'quote') updateQuoteNumbers();
+  if (t.dataset.k === 'sst') renderQuote();
+}
+document.addEventListener('input', e => setFromInput(e.target));
+document.addEventListener('change', e => { if (e.target.type === 'checkbox' || e.target.tagName === 'SELECT') setFromInput(e.target); });
+
+let delVisitArm = null;
+document.addEventListener('click', async e => {
+  const g = e.target.closest('[data-go]');
+  if (g) { if (rec.on && g.dataset.go !== 'capture') stopRec(); go(g.dataset.go); return; }
+  const a = e.target.closest('[data-act]'); if (!a) return;
+  const act = a.dataset.act, id = a.dataset.id;
+  switch (act) {
+    case 'new': V = blankVisit(); save(); go('visit'); break;
+    case 'open': V = await db.get('visit:' + id); if (V) go(V.lines.length ? 'quote' : 'visit'); break;
+    case 'delvisit':
+      if (delVisitArm !== id) { delVisitArm = id; a.style.background = 'var(--rec-soft)'; toast('Tap the bin again to delete this visit'); setTimeout(() => { delVisitArm = null; a.style.background = ''; }, 3500); }
+      else { await db.del('visit:' + id); delVisitArm = null; toast('Visit deleted'); renderHome(); }
+      break;
+    case 'set': V[a.dataset.k] = a.dataset.v; save(); render(); break;
+    case 'gps':
+      if (!navigator.geolocation) return toast('Location is not available on this device.', true);
+      toast('Finding location…');
+      navigator.geolocation.getCurrentPosition(p => { V.gps = { lat: p.coords.latitude, lng: p.coords.longitude }; save(); renderVisit(); toast('Location pinned'); },
+        () => toast('Location blocked. Allow location for this site in your browser settings.', true), { enableHighAccuracy: true, timeout: 15000 });
+      break;
+    case 'cam': $('#camIn').click(); break;
+    case 'gal': $('#galIn').click(); break;
+    case 'delphoto': V.photos = V.photos.filter(p => p.id !== id); if (V.photoId === id) V.photoId = V.photos[0]?.id || null; save(); render(); break;
+    case 'rec': rec.on ? stopRec() : startRec(); break;
+    case 'notes': runNotes(); break;
+    case 'addnote': V.notes.push({ id: uid(), label: 'OTHER', text: '', manual: true }); save(); renderCapture(); break;
+    case 'del': V[a.dataset.col] = V[a.dataset.col].filter(x => x.id !== id); save(); render(); break;
+    case 'addzone': V.zones.push({ id: uid(), name: '', work: '', area: null, tags: [] }); save(); renderMeasure(); setTimeout(() => { const ins = document.querySelectorAll('#b-measure input[data-k="name"]'); ins[ins.length - 1]?.focus(); }, 50); break;
+    case 'area': { const z = V.zones.find(x => x.id === id); z.area = Math.max(0, (+z.area || 0) + +a.dataset.d); save(); renderMeasure(); break; }
+    case 'pickphoto': V.photoId = id; save(); renderConcept(); break;
+    case 'gen': runConcept(); break;
+    case 'pickconcept': V.activeConcept = id; save(); renderConcept(); break;
+    case 'delconcept': V.concepts = V.concepts.filter(c => c.id !== id); V.activeConcept = V.concepts[V.concepts.length - 1]?.id || null; save(); renderConcept(); break;
+    case 'palette': runPalette(); break;
+    case 'addplant': V.plants.push({ id: uid(), name: '', botanical: '', role: '', zone: '', qty: null, unit: 'nos' }); save(); renderConcept(); break;
+    case 'buildquote': runQuote(); break;
+    case 'addline': V.lines.push({ id: uid(), description: '', detail: '', qty: 1, unit: 'lot', rate: 0, fromRateCard: true }); save(); renderQuote(); break;
+    case 'margin': V.margin = +a.dataset.v; save(); renderQuote(); break;
+    case 'print': window.print(); break;
+    case 'share': shareQuote(); break;
+    case 'wa': V.status = 'sent'; save(); break;
+    case 'logo': $('#logoIn').click(); break;
+    case 'dellogo': S.logo = ''; saveS(); renderSettings(); break;
+    case 'addrate': S.rateCard.push({ id: uid(), name: '', unit: 'nos', rate: null }); S.rateCardSample = false; saveS(); renderSettings(); break;
+    case 'delrate': S.rateCard = S.rateCard.filter(r => r.id !== id); S.rateCardSample = false; saveS(); renderSettings(); break;
+    case 'ping': {
+      const out = $('#pingOut'); out.textContent = 'Checking…';
+      try { const r = await api('ping', {}); out.innerHTML = `Claude: <span class="${r.claude ? 'ok' : 'bad'}">${r.claude ? 'connected' : 'ANTHROPIC_API_KEY missing'}</span> · OpenAI: <span class="${r.openai ? 'ok' : 'bad'}">${r.openai ? 'connected' : 'OPENAI_API_KEY missing'}</span>${r.passcode ? ' · passcode on' : ''}`; }
+      catch (er) { out.innerHTML = `<span class="bad">${esc(er.message)}</span>`; }
+      break;
+    }
+  }
+});
+
+/* ---------- start ---------- */
+(async () => {
+  try { const s = await db.get('settings'); if (s) S = { ...DEFAULT_SETTINGS, ...s }; else await db.set('settings', S); } catch { toast('This browser blocks saving. Visits will not be kept.', true); }
+  try { history.replaceState({ s: 'home' }, '', '#home'); } catch {}
+  go('home', false);
+})();
+</script>
+</body>
+</html>
